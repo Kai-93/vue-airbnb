@@ -7,5 +7,6 @@ app.use(router.routes()).use(router.allowedMethods());
 
 app.listen(3000, (err) => {
   if (err) throw err;
-  console.log('runing...');
+  // eslint-disable-next-line no-console
+  console.log('Mock server is running');
 });

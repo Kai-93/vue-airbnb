@@ -2,7 +2,8 @@
 const path = require('path');
 const utils = require('./utils');
 const config = require('../config');
-const vueLoaderConfig = require('./vue-loader.conf');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
 const { VueLoaderPlugin } = require('vue-loader');
 
 function resolve(dir) {
@@ -45,9 +46,63 @@ module.exports = {
     rules: [
       ...(config.dev.useEslint ? [createLintingRule()] : []),
       {
+        test: /\.css$/,
+        use: [
+          'vue-style-loader',
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              // you can specify a publicPath here
+              // by default it uses publicPath in webpackOptions.output
+              hmr: process.env.NODE_ENV === 'development',
+            },
+          },
+          {
+            loader: 'css-loader',
+            options: { importLoaders: 1 },
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              config: {
+                path: './postcss.config.js',
+              },
+            },
+          },
+        ],
+      },
+      {
+        test: /\.scss$/,
+        use: [
+          'vue-style-loader',
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              // you can specify a publicPath here
+              // by default it uses publicPath in webpackOptions.output
+              hmr: process.env.NODE_ENV === 'development',
+            },
+          },
+          {
+            loader: 'css-loader',
+            options: { importLoaders: 1 },
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              config: {
+                path: './postcss.config.js',
+              },
+            },
+          },
+          {
+            loader: 'sass-loader',
+          },
+        ],
+      },
+      {
         test: /\.vue$/,
-        loader: 'vue-loader',
-        options: vueLoaderConfig,
+        use: 'vue-loader',
       },
       {
         test: /\.js$/,

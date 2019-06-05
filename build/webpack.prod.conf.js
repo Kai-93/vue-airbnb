@@ -5,7 +5,6 @@ const webpack = require('webpack');
 const config = require('../config');
 const merge = require('webpack-merge');
 const baseWebpackConfig = require('./webpack.base.conf');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
@@ -20,31 +19,39 @@ const webpackConfig = merge(baseWebpackConfig, {
   output: {
     path: config.build.assetsRoot,
     filename: utils.assetsPath('js/[name].[chunkhash].js'),
-    chunkFilename: utils.assetsPath('js/[id].[chunkhash].js'),
+    chunkFilename: utils.assetsPath('js/[name].[chunkhash].js'),
   },
   optimization: {
     // 使用之后，公用模块中修改不影响bundel的hash值
+    // webpack的runtime
     runtimeChunk: {
-      name: entrypoint => `runtime~${entrypoint.name}`,
+      name: 'manifest',
     },
     splitChunks: {
       cacheGroups: {
         // 第三方代码
         // 使用一次以上的
         vendor: {
-          test: /[\\/]node_modules[\\/]/, // 表示默认拆分node_modules中的模块
+          test(module, chunks) {
+            return module.resource && module.resource.includes('node_modules');
+          },
           // https://webpack.docschina.org/plugins/split-chunks-plugin/#splitchunks-chunks
           chunks: 'all',
           // https://webpack.docschina.org/plugins/split-chunks-plugin/#splitchunks-minchunks
           minChunks: 1,
+          name: 'vendor',
         },
         // 不管同/异步，使用两次以上的模块抽离
         // 使用两次以上的
         common: {
+          test(module, chunks) {
+            return module.resource && !module.resource.includes('node_modules');
+          },
           // https://webpack.docschina.org/plugins/split-chunks-plugin/#splitchunks-chunks
           chunks: 'all',
           // https://webpack.docschina.org/plugins/split-chunks-plugin/#splitchunks-minchunks
           minChunks: 2,
+          name: 'common',
         },
       },
     },
@@ -68,7 +75,7 @@ const webpackConfig = merge(baseWebpackConfig, {
       // Options similar to the same options in webpackOptions.output
       // both options are optional
       filename: utils.assetsPath('css/[name].[chunkhash].css'),
-      chunkFilename: utils.assetsPath('css/[id].[chunkhash].css'),
+      chunkFilename: utils.assetsPath('css/[name].[chunkhash].css'),
     }),
     // Compress extracted CSS. We are using this plugin so that possible
     // duplicated CSS from different components can be deduped.
@@ -87,7 +94,7 @@ const webpackConfig = merge(baseWebpackConfig, {
       minify: {
         removeComments: true,
         collapseWhitespace: true,
-        removeAttributeQuotes: true,
+        // removeAttributeQuotes: true,
         // more options:
         // https://github.com/kangax/html-minifier#options-quick-reference
       },
@@ -98,14 +105,6 @@ const webpackConfig = merge(baseWebpackConfig, {
     new webpack.HashedModuleIdsPlugin(),
     // enable scope hoisting
     new webpack.optimize.ModuleConcatenationPlugin(),
-    // copy custom static assets
-    new CopyWebpackPlugin([
-      {
-        from: path.resolve(__dirname, '../static'),
-        to: config.build.assetsSubDirectory,
-        ignore: ['.*'],
-      },
-    ]),
   ],
 });
 

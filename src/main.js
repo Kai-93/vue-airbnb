@@ -3,6 +3,7 @@
 import Vue from 'vue';
 import App from './App';
 import router from './router';
+import store from './store';
 // 是否开启mock
 const bOpenMock = false;
 
@@ -16,6 +17,7 @@ Vue.config.productionTip = false;
 window.$vue = new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>',
 });

@@ -56,21 +56,33 @@ const webpackConfig = merge(baseWebpackConfig, {
         },
       },
     },
+    minimizer: [
+      // https://github.com/webpack-contrib/uglifyjs-webpack-plugin
+      // https://github.com/webpack-contrib/uglifyjs-webpack-plugin#minify
+      new UglifyJsPlugin({
+        test: /\.jsx?$/,
+        cache: true,
+        parallel: 5,
+        // 提取所有的注释
+        extractComments: 'all',
+        sourceMap: config.build.productionSourceMap,
+      }),
+    ],
   },
   plugins: [
     // http://vuejs.github.io/vue-loader/en/workflow/production.html
     new webpack.DefinePlugin({
       'process.env': env,
     }),
-    new UglifyJsPlugin({
-      uglifyOptions: {
-        compress: {
-          warnings: false,
-        },
-      },
-      sourceMap: config.build.productionSourceMap,
-      parallel: true,
-    }),
+    // new UglifyJsPlugin({
+    //   uglifyOptions: {
+    //     compress: {
+    //       warnings: false,
+    //     },
+    //   },
+    //   sourceMap: config.build.productionSourceMap,
+    //   parallel: true,
+    // }),
     // 分离css
     new MiniCssExtractPlugin({
       // Options similar to the same options in webpackOptions.output
@@ -107,7 +119,7 @@ const webpackConfig = merge(baseWebpackConfig, {
     // enable scope hoisting
     new webpack.optimize.ModuleConcatenationPlugin(),
     // 依赖图
-    new BundleAnalyzerPlugin(),
+    // new BundleAnalyzerPlugin(),
   ],
 });
 

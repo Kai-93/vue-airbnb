@@ -6,10 +6,13 @@ const path = require('path');
 
 const mockServer = 'http://localhost:3000';
 const backServer = 'http://shopadmin.miaosuankeji.com';
+
 let target = backServer;
+
 if (process.argv[6] === '--mock') {
   target = mockServer;
 }
+
 module.exports = {
   dev: {
     // Paths

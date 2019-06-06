@@ -19,7 +19,7 @@ export default {
       },
     });
     import('./utils/test').then(({ default: test }) => {
-      test('Kaiser');
+      test('Kaiser1');
     });
   },
 };

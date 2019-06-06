@@ -4,14 +4,14 @@ import Vue from 'vue';
 import App from './App';
 import router from './router';
 import store from './store';
-// 是否开启mock
-const bOpenMock = false;
+// // 是否开启mock
+// const bOpenMock = false;
 
-if (bOpenMock) {
-  // 直接一般api
-  // eslint-disable-next-line global-require
-  require('./mock/mock');
-}
+// if (bOpenMock) {
+//   // 直接一般api
+//   // eslint-disable-next-line global-require
+//   require('./mock/mock');
+// }
 Vue.config.productionTip = false;
 
 window.$vue = new Vue({

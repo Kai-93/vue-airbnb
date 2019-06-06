@@ -9,8 +9,9 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
-const env = require('../config/prod.env');
+const env = require(`../config/${process.env.BUILD_ENV}.env`);
 
 const webpackConfig = merge(baseWebpackConfig, {
   mode: 'production',
@@ -28,6 +29,7 @@ const webpackConfig = merge(baseWebpackConfig, {
       name: 'manifest',
     },
     splitChunks: {
+      chunks: 'all',
       cacheGroups: {
         // 第三方代码
         // 使用一次以上的
@@ -105,6 +107,8 @@ const webpackConfig = merge(baseWebpackConfig, {
     new webpack.HashedModuleIdsPlugin(),
     // enable scope hoisting
     new webpack.optimize.ModuleConcatenationPlugin(),
+    // 依赖图
+    new BundleAnalyzerPlugin(),
   ],
 });
 

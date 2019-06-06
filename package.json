@@ -10,7 +10,8 @@
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",
     "lint": "eslint --ext .js,.vue src",
-    "build": "node build/build.js",
+    "build_dev": "cross-env BUILD_ENV=development node build/build.js",
+    "build_prod": "cross-env BUILD_ENV=production node build/build.js",
     "test": "node test.js --env.test="
   },
   "dependencies": {
@@ -35,6 +36,7 @@
     "babel-preset-stage-2": "^6.22.0",
     "chalk": "^2.0.1",
     "copy-webpack-plugin": "^4.0.1",
+    "cross-env": "^5.2.0",
     "css-loader": "^2.1.1",
     "eslint": "^4.15.0",
     "eslint-config-airbnb-base": "^11.3.0",

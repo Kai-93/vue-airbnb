@@ -105,20 +105,27 @@ module.exports = {
         use: 'vue-loader',
       },
       {
-        test: /\.js$/,
-        loader: 'babel-loader',
+        test: /\.jsx?$/,
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              cacheDirectory: true,
+              plugins: ['dynamic-import-webpack'],
+            },
+          },
+        ],
         include: [
           resolve('src'),
           resolve('test'),
           resolve('node_modules/webpack-dev-server/client'),
         ],
-        options: {
-          cacheDirectory: true,
-        },
       },
       {
         test: /\.tsx?$/,
         loader: 'ts-loader',
+        options: { appendTsSuffixTo: [/\.vue$/] },
+        exclude: /node_modules/,
         include: [resolve('src')],
       },
       {

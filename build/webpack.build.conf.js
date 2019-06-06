@@ -29,7 +29,6 @@ const webpackConfig = merge(baseWebpackConfig, {
       name: 'manifest',
     },
     splitChunks: {
-      chunks: 'all',
       cacheGroups: {
         // 第三方代码
         // 使用一次以上的

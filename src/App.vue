@@ -18,7 +18,7 @@ export default {
         password: md5('password'),
       },
     });
-    import('./utils/test.ts').then(({ default: test }) => {
+    import('./utils/test').then(({ default: test }) => {
       test('Kaiser');
     });
   },

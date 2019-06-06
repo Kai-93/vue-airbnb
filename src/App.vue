@@ -8,6 +8,7 @@
 <script>
 import { md5 } from '@/utils/crypto';
 import { postLogin } from './api/user/api_login';
+import greeter from './utils/test.ts';
 
 export default {
   name: 'App',
@@ -18,6 +19,7 @@ export default {
         password: md5('password'),
       },
     });
+    greeter('Kaiser');
   },
 };
 </script>

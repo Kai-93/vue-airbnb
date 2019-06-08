@@ -29,7 +29,54 @@ const webpackConfig = merge(baseWebpackConfig, {
       name: 'manifest',
     },
     splitChunks: {
+      chunks: 'all',
+      minSize: 10000, // 形成一个新代码块最小的体积
+      maxSize: 0,
+      minChunks: 1, // 引入一次及以上被打包
+      maxAsyncRequests: 10, // 按需加载时候最大的并行请求数
+      maxInitialRequests: 10, // 最大初始化请求数
+      automaticNameDelimiter: '.', // 打包分割符
+      name: true,
       cacheGroups: {
+        vue: {
+          test(module, chunks) {
+            return (
+              module.resource &&
+              module.resource.includes('node_modules') &&
+              module.resource.includes('node_modules/vue')
+            );
+          },
+          chunks: 'all',
+          priority: 100, // 设置高于async-commons，避免打包到async-common中
+          minChunks: 1,
+          name: 'vue',
+        },
+        'element-ui.common': {
+          test(module, chunks) {
+            return (
+              module.resource &&
+              module.resource.includes('node_modules') &&
+              module.resource.includes('element-ui.common')
+            );
+          },
+          chunks: 'all',
+          priority: 95,
+          minChunks: 1,
+          name: 'element-ui.common',
+        },
+        'element-other': {
+          test(module, chunks) {
+            return (
+              module.resource &&
+              module.resource.includes('node_modules') &&
+              module.resource.includes('element')
+            );
+          },
+          chunks: 'all',
+          priority: 90,
+          minChunks: 1,
+          name: 'element-other',
+        },
         // 第三方代码
         // 使用一次以上的
         vendor: {
@@ -38,6 +85,7 @@ const webpackConfig = merge(baseWebpackConfig, {
           },
           // https://webpack.docschina.org/plugins/split-chunks-plugin/#splitchunks-chunks
           chunks: 'all',
+          priority: 85,
           // https://webpack.docschina.org/plugins/split-chunks-plugin/#splitchunks-minchunks
           minChunks: 1,
           name: 'vendor',
@@ -52,6 +100,7 @@ const webpackConfig = merge(baseWebpackConfig, {
           chunks: 'all',
           // https://webpack.docschina.org/plugins/split-chunks-plugin/#splitchunks-minchunks
           minChunks: 2,
+          priority: 80,
           name: 'common',
         },
       },
@@ -74,15 +123,6 @@ const webpackConfig = merge(baseWebpackConfig, {
     new webpack.DefinePlugin({
       'process.env': env,
     }),
-    // new UglifyJsPlugin({
-    //   uglifyOptions: {
-    //     compress: {
-    //       warnings: false,
-    //     },
-    //   },
-    //   sourceMap: config.build.productionSourceMap,
-    //   parallel: true,
-    // }),
     // 分离css
     new MiniCssExtractPlugin({
       // Options similar to the same options in webpackOptions.output
@@ -92,6 +132,7 @@ const webpackConfig = merge(baseWebpackConfig, {
     }),
     // Compress extracted CSS. We are using this plugin so that possible
     // duplicated CSS from different components can be deduped.
+    // https://github.com/nmfr/optimize-css-assets-webpack-plugin
     new OptimizeCSSPlugin({
       cssProcessorOptions: config.build.productionSourceMap
         ? { safe: true, map: { inline: false } }
@@ -119,7 +160,7 @@ const webpackConfig = merge(baseWebpackConfig, {
     // enable scope hoisting
     new webpack.optimize.ModuleConcatenationPlugin(),
     // 依赖图
-    // new BundleAnalyzerPlugin(),
+    new BundleAnalyzerPlugin(),
   ],
 });
 

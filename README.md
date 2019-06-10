@@ -86,7 +86,7 @@ npm run build_prod
     |--- index.js # store整合及注册
   |--- utils # 工具集
     |--- name.js # 具体工具
-  |--- filter # 过滤器
+  |--- filters # 过滤器
     |--- name.js # 具体过滤器
   |--- App.vue # 入口vue文件
   |--- main.js # 入口js文件

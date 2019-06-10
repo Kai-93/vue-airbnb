@@ -1,6 +1,6 @@
 # vue-airbnb
 
-> A vue.js project with airbnb
+规范：https://shimo.im/docs/vWItgz8Z4UI5apIN
 
 ## 脚本说明
 

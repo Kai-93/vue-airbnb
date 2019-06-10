@@ -2,7 +2,7 @@
  * @Author: Kaiser
  * @Date: 2019-06-05 15:22:55
  * @Last Modified by: Kaiser
- * @Last Modified time: 2019-06-06 15:58:44
+ * @Last Modified time: 2019-06-09 14:53:54
  */
 
 <template>
@@ -20,7 +20,7 @@ export default {
     function greeter(person: String) {
       window.console.log(`Hello, ${person}`);
     }
-    greeter('Kaiser2');
+    greeter('Kaiser');
   },
 };
 </script>

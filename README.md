@@ -30,16 +30,16 @@ npm run build_prod
 
 ```
 |--- build # webpack配置文件
-  |--- build.js 
-  |--- webpack.base.conf.js
-  |--- webpack.build.conf.js
-  |--- webpack.local.conf.js
+  |--- build.js # 编译代码
+  |--- webpack.base.conf.js # 公共配置
+  |--- webpack.build.conf.js # 编译时的配置
+  |--- webpack.local.conf.js # 本地环境的配置
 
 |--- config # 全局环境变量设置
-  |--- index.js
-  |--- local.dev.js
-  |--- development.env.js
-  |--- production.env.js
+  |--- index.js # 开发与环境的webpack参数配置，dev-server，输出资源配置
+  |--- local.dev.js # 本地开发环境的环境变量配置
+  |--- development.env.js # 开发环境编译的环境变量配置
+  |--- production.env.js # 生产环境编译的环境变量配置
 
 |--- dist # 编译输出文件
   |--- static # 静态资源

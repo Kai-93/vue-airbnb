@@ -64,4 +64,8 @@ module.exports = {
     // https://eslint.org/docs/rules/linebreak-style
     'linebreak-style': [0, 'error', 'windows'],
   },
+  // https://eslint.org/docs/user-guide/configuring#specifying-globals
+  globals: {
+    $vue: 'off',
+  },
 };

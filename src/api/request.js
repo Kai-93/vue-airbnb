@@ -3,9 +3,6 @@ import { encrypt, decrypt } from '@/utils/crypto';
 import { Message } from 'element-ui';
 import router from '@/router';
 
-// Progress 进度条
-import NProgress from 'nprogress';
-import 'nprogress/nprogress.css';
 import { getToken } from '@/utils';
 import { removeLocal, setLocal } from '@/utils/storage';
 import apiModule from './api_module';
@@ -36,7 +33,7 @@ const repeatUrls = [
 // 请求拦截
 API.interceptors.request.use(
   (config) => {
-    NProgress.start();
+    $vue.$store.dispatch('ui/setNProgress', 'start');
     return config;
   },
   error => Promise.reject(error),
@@ -45,11 +42,11 @@ API.interceptors.request.use(
 // 响应拦截
 API.interceptors.response.use(
   (res) => {
-    NProgress.done();
+    $vue.$store.dispatch('ui/setNProgress', 'done');
     return res.data || res;
   },
   (error) => {
-    NProgress.done();
+    $vue.$store.dispatch('ui/setNProgress', 'done');
     let message = '请求错误！';
     if (error.response) {
       switch (error.response.status) {

@@ -2,7 +2,7 @@
  * @Author: Kaiser
  * @Date: 2019-06-10 10:26:35
  * @Last Modified by: Kaiser
- * @Last Modified time: 2019-06-10 10:31:52
+ * @Last Modified time: 2019-06-10 10:37:31
  */
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';

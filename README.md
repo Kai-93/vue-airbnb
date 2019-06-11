@@ -69,7 +69,9 @@ npm run build_prod
       |--- ...
     |--- module_name # 各模块的业务组件
       |--- ...
-  |---  pages # 页面
+  |--- constant # 保存项目中常量 
+    |--- module_name.js # 以模块进行划分
+  |--- pages # 页面
     |--- module_name # 以模块为单位
       |--- pageName.vue # 页面名字
   |--- router # 路由管理

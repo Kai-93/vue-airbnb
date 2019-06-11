@@ -1,213 +1,152 @@
-import Axios from 'axios';
-import { encrypt, decrypt } from '@/utils/crypto';
-import { Message } from 'element-ui';
-import router from '@/router';
-
-import { getToken } from '@/utils';
-import { removeLocal, setLocal } from '@/utils/storage';
-import apiModule from './api_module';
-
-const env = process.env;
-Axios.defaults.withCredentials = true;
-const API = Axios.create();
-API.defaults.timeout = 60000;
-
-// 不校验token url数组
-const ignoreUrls = [
-  '/login/merchant',
-  '/login/merchant_login_check',
-  '/login/merchant_login_by_cellphone',
-  '/login/merchant_login_by_code',
-];
-
-// 请求列表
-let requestList = [];
-
-// 可重复请求列表
-const repeatUrls = [
-  '/category/find_category_children',
-  '/merchant/uncopy',
-  '/admin/product_unimport',
-];
-
-// 请求拦截
-API.interceptors.request.use(
-  (config) => {
-    $vue.$store.dispatch('ui/setNProgress', 'start');
-    return config;
+/*
+ * @Author: Kaiser
+ * @Date: 2019-06-10 15:28:52
+ * @Last Modified by: Kaiser
+ * @Last Modified time: 2019-06-11 11:05:06
+ */
+import axios from '_modules/axios';
+import { getType } from '@/utils/tools.ts';
+import apiModules from './api_module';
+// 默认request的配置
+const DEFAULT_OPTION = {
+  headers: {
+    'Content-Type': 'application/json;charset=utf-8',
   },
-  error => Promise.reject(error),
-);
+  timeout: 30000,
+  baseURL: process.env.API_DOMAIN,
+};
 
-// 响应拦截
-API.interceptors.response.use(
-  (res) => {
-    $vue.$store.dispatch('ui/setNProgress', 'done');
-    return res.data || res;
-  },
-  (error) => {
-    $vue.$store.dispatch('ui/setNProgress', 'done');
-    let message = '请求错误！';
-    if (error.response) {
-      switch (error.response.status) {
-        case 400:
-          message = '请求参数或语句有误！';
-          break;
-        case 401:
-          message = '未授权，请重新登录！';
-          break;
-        case 403:
-          message = '拒绝访问！';
-          break;
-        case 404:
-          message = '未找到该资源！';
-          break;
-        case 405:
-          message = '请求方法未允许！';
-          break;
-        case 408:
-          message = '请求超时！';
-          break;
-        case 500:
-          message = '服务器端出错！';
-          break;
-        case 501:
-          message = '网络未实现！';
-          break;
-        case 502:
-          message = '网络错误！';
-          break;
-        case 503:
-          message = '服务不可用！';
-          break;
-        case 504:
-          message = '网络超时！';
-          break;
-        case 505:
-          message = 'http版本不支持该请求！';
-          break;
-        default:
-          message = '请求错误！';
+/**
+ * 根据网络状态码返回错误信息
+ * @param {Number or String} status 网络状态码
+ */
+function getResponseErrorTip(status) {
+  // 错误状态的提示文字
+  const RESPONSE_ERROR_TIP = {
+    400: '请求参数或语句有误！',
+    401: '未授权，请重新登录！',
+    403: '拒绝访问！',
+    404: '未找到该资源！',
+    405: '请求方法未允许！',
+    408: '请求超时！',
+    500: '服务器端出错！',
+    501: '网络未实现！',
+    502: '网络错误！',
+    503: '服务不可用！',
+    504: '网络超时！',
+    505: 'http版本不支持该请求！',
+  };
+  return RESPONSE_ERROR_TIP[status] || '请求错误！';
+}
+
+export default class Request {
+  /**
+   * 构造函数
+   * @param {Object} option 自定义request配置
+   * option.module必传，其意为请求的模块名
+   */
+  constructor(option = {}) {
+    if (option.module) {
+      // 设置模块的url
+      this.moduleUrl = apiModules[option.module];
+      if (!this.moduleUrl) {
+        throw new Error("the request's module is set incorrectly");
       }
     }
-    Message.error(
-      error.response ? `${error.response.status} : ${message}` : message,
+    const $option = { ...DEFAULT_OPTION, ...option };
+    delete $option.module;
+    this.$http = axios.create($option);
+
+    // request拦截器
+    this.$http.interceptors.request.use(
+      (config) => {
+        $vue.$store.dispatch('ui/setNProgress', 'start');
+        return config;
+      },
+      error => Promise.reject(error),
     );
-    return Promise.reject(error);
-  },
-);
-export default class Request {
-  constructor(options) {
-    if (!options.module) {
-      throw new Error('module不能为空');
-    }
-    this.module = options.module;
+
+    // response拦截器
+    this.$http.interceptors.response.use(
+      (response) => {
+        $vue.$store.dispatch('ui/setNProgress', 'done');
+        return response.data || response;
+      },
+      (error) => {
+        const message = getResponseErrorTip(
+          error.response && error.response.status,
+        );
+        $vue.$store.dispatch('ui/showErrorMessage', message);
+        return Promise.reject(error);
+      },
+    );
   }
-  post(url = '', data = {}, methods = 'POST', responseType) {
-    let $data = data;
-    if (requestList.indexOf(url) >= 0 && repeatUrls.indexOf(url) < 0) {
-      return new Promise((resolve, reject) => {
-        reject({
-          errorCode: 0,
-          message: '正在请求中！',
-        });
+  /**
+   * 将请求参数封装到headers的DATA中，必要可在这里加密
+   * @param {String} url 实际请求的url
+   * @param {Object} data 请求参数
+   */
+  setDATA(url, data = {}) {
+    let str = '';
+    if (getType(data) === 'Object') {
+      Object.entries(data).forEach((query) => {
+        str += `${query[0]}=${query[1]}`;
       });
     }
-    let random = getToken();
-    if (ignoreUrls.indexOf(url) >= 0) {
-      random = env.random;
-    } else if (!random) {
-      router.push('/login');
-      return new Promise((resolve, reject) => {
-        reject({
-          errorCode: 0,
-          message: '请登录！',
-        });
-      });
-    }
-    let token = JSON.stringify({
-      _url_: url,
-      _random_: random,
+    this.$http.defaults.headers.DATA = JSON.stringify({
+      _url_: url + (str && `?${str}`),
+      // todo 这是干啥的？
+      _random_: '880000003',
     });
-    if (env.encryptionHeader) {
-      token = encrypt(token, 'header');
-    }
-    requestList.push(url);
-    if (env.encryption) {
-      $data = encrypt(JSON.stringify($data));
-    }
-    const headers = {
-      'Content-Type':
-        Object.prototype.toString.call($data) === '[object FormData]'
-          ? 'multipart/form-data'
-          : 'application/json;charset=UTF-8',
-      DATA: token,
-    };
+  }
 
-    const params = {
-      url: apiModule[this.module],
-      method: methods,
-      data: $data,
-      headers,
-    };
-    if (responseType) {
-      params.responseType = responseType;
-    }
-    if (methods === 'GET') {
-      params.params = $data;
-      delete params.data;
-    }
+  get(url, data) {
+    return new Promise((resolve) => {
+      this.setDATA(url, data);
+      resolve(
+        this.$http({
+          method: 'get',
+          url: this.moduleUrl,
+        }),
+      );
+    });
+  }
 
-    return new Promise((resolve, reject) => {
-      API({ ...params }).then(
-        (response) => {
-          let $response = response;
-          requestList = requestList.filter(ele => ele !== url);
-          if (
-            $response.code &&
-            $response.code !== 0 &&
-            $response.code !== 4002602 &&
-            $response.code !== 3001 &&
-            $response.code !== 3002 &&
-            $response.code !== 4001109 &&
-            $response.code !== 4002802
-          ) {
-            Message.error($response.message);
-          }
-          if (
-            ($response.code >= 7001 && $response.code <= 7005) ||
-            $response.code === 8
-          ) {
-            Message.error($response.message);
-            if ($response.code >= 7003 && $response.code <= 7005) {
-              setLocal('membershipExpired', 'true');
-              router.push('/membership');
-              return reject({
-                errorCode: 0,
-                message: $response.message,
-              });
-            }
-            removeLocal('userInfo');
-            removeLocal('miaosuan-token');
-            removeLocal('userPrice');
-            router.push('/login');
-            return reject({
-              errorCode: 0,
-              message: $response.message,
-            });
-          }
-          if (env.encryption) {
-            $response = JSON.parse(decrypt($response));
-          }
-          if (!$response.data || $response.data === null) {
-            $response.data = {};
-          }
-          return resolve($response);
-        },
-        (err) => {
-          requestList = requestList.filter(ele => ele !== url);
-          return reject(err);
-        },
+  post(url, data) {
+    return new Promise((resolve) => {
+      this.setDATA(url);
+      resolve(
+        this.$http({
+          method: 'post',
+          url: this.moduleUrl,
+          data,
+        }),
+      );
+    });
+  }
+
+  delete(url, data) {
+    return new Promise((resolve) => {
+      this.setDATA(url);
+      resolve(
+        this.$http({
+          method: 'delete',
+          url: this.moduleUrl,
+          data,
+        }),
+      );
+    });
+  }
+
+  put(url, data) {
+    return new Promise((resolve) => {
+      this.setDATA(url);
+      resolve(
+        this.$http({
+          method: 'put',
+          url: this.moduleUrl,
+          data,
+        }),
       );
     });
   }

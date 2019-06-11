@@ -6,17 +6,14 @@
 </template>
 
 <script>
-import { md5 } from '@/utils/crypto';
-import { postLogin } from './api/user/api_login';
+import user from './api/user/api_login';
 
 export default {
   name: 'App',
   created() {
-    postLogin({
-      params: {
-        userName: 'Kaiser',
-        password: md5('password'),
-      },
+    user.postLogin({
+      userName: 'Kaiser',
+      password: 'password',
     });
     import('./utils/test').then(({ default: test }) => {
       test('Kaiser');

@@ -63,11 +63,6 @@ module.exports = {
           },
           {
             loader: 'postcss-loader',
-            options: {
-              config: {
-                path: './postcss.config.js',
-              },
-            },
           },
         ],
       },
@@ -89,20 +84,25 @@ module.exports = {
           },
           {
             loader: 'postcss-loader',
-            options: {
-              config: {
-                path: './postcss.config.js',
-              },
-            },
           },
           {
             loader: 'sass-loader',
+            options: {
+              data: '$value: red;',
+            },
+          },
+          {
+            loader: 'sass-resources-loader',
+            options: {
+              // Provide path to the file with resources
+              resources: [path.resolve(__dirname, './../src/style/theme.scss')],
+            },
           },
         ],
       },
       {
         test: /\.vue$/,
-        use: 'vue-loader',
+        loader: 'vue-loader',
       },
       {
         test: /\.jsx?$/,

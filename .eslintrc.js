@@ -63,6 +63,8 @@ module.exports = {
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     // https://eslint.org/docs/rules/linebreak-style
     'linebreak-style': [0, 'error', 'windows'],
+    // remove console
+    'no-console': 'off',
   },
   // https://eslint.org/docs/user-guide/configuring#specifying-globals
   globals: {

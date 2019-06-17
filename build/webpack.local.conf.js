@@ -18,7 +18,6 @@ const devWebpackConfig = merge(baseWebpackConfig, {
   module: {},
   // cheap-module-eval-source-map is faster for development
   devtool: config.dev.devtool,
-
   // these devServer options should be customized in /config/index.js
   devServer: {
     clientLogLevel: 'warning',
@@ -32,7 +31,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     },
     hot: true,
     contentBase: false, // since we use CopyWebpackPlugin.
-    compress: true,
+    compress: true, // 是否开启 Gzip 压缩
     host: HOST || config.dev.host,
     port: PORT || config.dev.port,
     open: config.dev.autoOpenBrowser,
@@ -44,6 +43,10 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     proxy: config.dev.proxyTable,
     quiet: true, // necessary for FriendlyErrorsPlugin
     watchOptions: {
+      //不监听的文件或文件夹，支持正则匹配。默认为空
+      ignored: /node modules/,
+      //监听到变化发生后，等 300ms 再执行动作，截流，防止文件更新太快导致重新编 译频率太快。默认为 300ms
+      aggregateTimeout: 300,
       poll: config.dev.poll,
     },
   },

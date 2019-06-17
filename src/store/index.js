@@ -2,7 +2,7 @@
  * @Author: Kaiser
  * @Date: 2019-06-10 09:51:38
  * @Last Modified by: Kaiser
- * @Last Modified time: 2019-06-10 10:30:40
+ * @Last Modified time: 2019-06-17 14:18:12
  */
 import Vue from 'vue';
 import Vuex from '_modules/vuex';

@@ -22,6 +22,7 @@ const createLintingRule = () => ({
 });
 
 module.exports = {
+  // Webpack 使用的根目录， string 类型必须是绝对路径
   context: path.resolve(__dirname, '../'),
   entry: {
     main: './src/main.js',
@@ -35,7 +36,7 @@ module.exports = {
         : config.dev.assetsPublicPath,
   },
   resolve: {
-    extensions: ['.js', '.vue', '.json', '.ts'],
+    extensions: ['.js', '.vue', '.ts', '.json'],
     alias: {
       vue$: 'vue/dist/vue.esm.js',
       '@': resolve('src'),

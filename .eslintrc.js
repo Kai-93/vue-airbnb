@@ -24,7 +24,7 @@ module.exports = {
       // eslint只识别部分alias的解决方案
       alias: {
         map: [['_modules', './node_modules']],
-        extensions: ['.ts', '.js', '.json', 'vue', 'd.ts'],
+        extensions: ['.js', 'vue', '.ts', 'd.ts', '.json'],
       },
     },
   },

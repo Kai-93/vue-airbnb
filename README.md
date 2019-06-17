@@ -2,6 +2,8 @@
 
 规范：https://shimo.im/docs/vWItgz8Z4UI5apIN
 
+缓存策略：http://note.youdao.com/noteshare?id=99729caeb7a7e679d61ebc3fa075ee29
+
 ## 脚本说明
 
 ``` bash

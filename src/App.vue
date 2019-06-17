@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import test from '@/utils/test';
+// import test from '@/utils/test';
 import user from '@/api/user/api_login';
 
 export default {
@@ -16,10 +16,10 @@ export default {
       userName: 'Kaiser',
       password: 'password',
     });
-    // import('./utils/test').then(({ default: test }) => {
-    //   test('Kaiser');
-    // });
-    test('Kaiser');
+    import('./utils/test').then(({ default: test }) => {
+      test('Kaiser');
+    });
+    // test('Kaiser');
   },
 };
 </script>

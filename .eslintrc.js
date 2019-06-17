@@ -1,4 +1,5 @@
 // https://eslint.org/docs/user-guide/configuring
+const path = require('path');
 
 module.exports = {
   root: true,
@@ -18,13 +19,13 @@ module.exports = {
   settings: {
     'import/resolver': {
       webpack: {
-        config: './build/webpack.base.conf.js',
+        config: path.resolve(__dirname, './build/webpack.base.conf.js'),
       },
       // https://www.npmjs.com/package/eslint-import-resolver-alias
       // eslint只识别部分alias的解决方案
       alias: {
         map: [['_modules', './node_modules']],
-        extensions: ['.js', 'vue', '.ts', 'd.ts', '.json'],
+        extensions: ['.ts', '.tsx', '.d.ts', '.js', '.vue', '.json'],
       },
     },
   },
@@ -35,6 +36,7 @@ module.exports = {
       'error',
       'always',
       {
+        ts: 'never',
         js: 'never',
         vue: 'never',
       },

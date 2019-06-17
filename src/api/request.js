@@ -2,10 +2,10 @@
  * @Author: Kaiser
  * @Date: 2019-06-10 15:28:52
  * @Last Modified by: Kaiser
- * @Last Modified time: 2019-06-17 15:14:41
+ * @Last Modified time: 2019-06-17 16:28:38
  */
 import axios from '_modules/axios';
-import { getType } from '@/utils/tools.ts';
+import { getType } from '@/utils/tools';
 import apiModules from './api_module';
 // 默认request的配置
 const DEFAULT_OPTION = {

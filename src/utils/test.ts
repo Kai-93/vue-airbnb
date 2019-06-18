@@ -1,5 +1,7 @@
 function greeter(person: String) {
-  console.log(`Hello ${person}`);
+  let x: number = 1;
+  x = 123;
+  console.log(`Hello ${person} ${x}`);
 }
 
 export default greeter;

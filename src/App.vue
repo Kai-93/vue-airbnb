@@ -17,7 +17,7 @@ export default {
       password: 'password',
     });
     import('./utils/test').then(({ default: test }) => {
-      test('Kaiser');
+      test('');
     });
     // test('Kaiser');
   },

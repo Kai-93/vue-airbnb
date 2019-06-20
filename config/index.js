@@ -3,9 +3,9 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
 
 const path = require('path');
-
 const mockServer = 'http://localhost:3000';
 const backServer = 'http://shopadmin.miaosuankeji.com';
+const { VERSION } = require('./version');
 
 let target = backServer;
 
@@ -58,7 +58,7 @@ module.exports = {
 
   build: {
     // Template for index.html
-    index: path.resolve(__dirname, '../dist/index.html'),
+    index: path.resolve(__dirname, `../dist/index.${VERSION}.html`),
 
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),

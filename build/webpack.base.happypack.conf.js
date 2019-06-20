@@ -4,8 +4,10 @@ const utils = require('./utils');
 const config = require('../config');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
-
 const { VueLoaderPlugin } = require('vue-loader');
+const HappyPack = require('happypack');
+// 构造出共享进程池，进程池中包含5个子进程
+const happyThreadPool = HappyPack.ThreadPool({ size: 5 });
 
 function resolve(dir) {
   return path.join(__dirname, '..', dir);
@@ -13,13 +15,13 @@ function resolve(dir) {
 
 const createLintingRule = () => ({
   test: /\.(js|vue|ts)$/,
-  loader: 'eslint-loader',
+  // loader: 'eslint-loader',
+  use: 'happypack/loader?id=eslint',
   enforce: 'pre',
-  include: [resolve('src'), resolve('test')],
-  options: {
-    formatter: require('eslint-friendly-formatter'),
-    emitWarning: !config.dev.showEslintErrorsInOverlay,
-  },
+  include: [
+    resolve('src'),
+    // resolve('test')
+  ],
 });
 
 module.exports = {
@@ -43,8 +45,17 @@ module.exports = {
       '@': resolve('src'),
       _modules: resolve('node_modules'),
     },
+    // https://webpack.docschina.org/configuration/resolve/#resolve-modules
+    // 告诉 webpack 解析模块时应该搜索的目录。
+    modules: [resolve('node_modules'), resolve('src')],
   },
   module: {
+    // https://webpack.js.org/configuration/module/#modulenoparse
+    // Ignored files should not have calls to import, require, define or any other importing mechanism.
+    noParse: content => {
+      const conditions = /现在还没有/;
+      return conditions.test(content);
+    },
     rules: [
       ...(config.dev.useEslint ? [createLintingRule()] : []),
       {
@@ -59,13 +70,7 @@ module.exports = {
               hmr: process.env.NODE_ENV === 'local',
             },
           },
-          {
-            loader: 'css-loader',
-            options: { importLoaders: 1 },
-          },
-          {
-            loader: 'postcss-loader',
-          },
+          'happypack/loader?id=css',
         ],
       },
       {
@@ -80,19 +85,9 @@ module.exports = {
               hmr: process.env.NODE_ENV === 'local',
             },
           },
-          {
-            loader: 'css-loader',
-            options: { importLoaders: 1 },
-          },
-          {
-            loader: 'postcss-loader',
-          },
-          {
-            loader: 'sass-loader',
-            options: {
-              data: '$value: red;',
-            },
-          },
+          'happypack/loader?id=css',
+          'happypack/loader?id=sass',
+          // 定义全局sass样式
           {
             loader: 'sass-resources-loader',
             options: {
@@ -104,22 +99,14 @@ module.exports = {
       },
       {
         test: /\.vue$/,
-        loader: 'vue-loader',
+        use: 'vue-loader',
       },
       {
         test: /\.jsx?$/,
-        use: [
-          {
-            loader: 'babel-loader',
-            options: {
-              cacheDirectory: true,
-              plugins: ['dynamic-import-webpack'],
-            },
-          },
-        ],
+        use: 'happypack/loader?id=babel',
         include: [
           resolve('src'),
-          resolve('test'),
+          // resolve('test'),
           resolve('node_modules/webpack-dev-server/client'),
         ],
       },
@@ -164,6 +151,62 @@ module.exports = {
     // 显示打包时间
     new ProgressBarPlugin({
       format: '  build [:bar] ' + ':percent' + ' (:elapsed seconds)',
+    }),
+    // happypack - babel-loader
+    new HappyPack({
+      id: 'babel',
+      loaders: [
+        {
+          loader: 'babel-loader',
+          options: {
+            cacheDirectory: true,
+            plugins: ['dynamic-import-webpack'],
+          },
+        },
+      ],
+      // 使用共享进程池中的子进程去处理任务
+      threadPool: happyThreadPool,
+    }),
+    // happypack - css-loader
+    new HappyPack({
+      id: 'css',
+      loaders: [
+        {
+          loader: 'css-loader',
+          options: { importLoaders: 1 },
+        },
+        'postcss-loader',
+      ],
+      // 使用共享进程池中的子进程去处理任务
+      threadPool: happyThreadPool,
+    }),
+    // happypack - sass-loader
+    new HappyPack({
+      id: 'sass',
+      loaders: [
+        {
+          loader: 'sass-loader',
+          options: {
+            // 全局变量定义
+            data: '$value: red;',
+          },
+        },
+      ],
+      // 使用共享进程池中的子进程去处理任务
+      threadPool: happyThreadPool,
+    }),
+    // happypack - eslint-loader
+    new HappyPack({
+      id: 'eslint',
+      loaders: [
+        {
+          loader: 'eslint-loader',
+          options: {
+            formatter: require('eslint-friendly-formatter'),
+            emitWarning: !config.dev.showEslintErrorsInOverlay,
+          },
+        },
+      ],
     }),
   ],
   node: {

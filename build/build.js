@@ -3,7 +3,7 @@ require('./check-versions')();
 
 process.env.NODE_ENV = 'production';
 
-const ora = require('ora');
+// const ora = require('ora');
 const rm = require('rimraf');
 const path = require('path');
 const chalk = require('chalk');
@@ -11,13 +11,13 @@ const webpack = require('webpack');
 const config = require('../config');
 const webpackConfig = require('./webpack.build.conf');
 
-const spinner = ora(`building for ${process.env.BUILD_ENV}...`);
-spinner.start();
+// const spinner = ora(`building for ${process.env.BUILD_ENV}...`);
+// spinner.start();
 
 rm(path.join(config.build.assetsRoot, config.build.assetsSubDirectory), err => {
   if (err) throw err;
   webpack(webpackConfig, (err, stats) => {
-    spinner.stop();
+    // spinner.stop();
     if (err) throw err;
     process.stdout.write(
       stats.toString({

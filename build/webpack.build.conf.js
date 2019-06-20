@@ -9,9 +9,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-
 const env = require(`../config/${process.env.BUILD_ENV}.env`);
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 const webpackConfig = merge(baseWebpackConfig, {
   mode: 'production',

@@ -29,8 +29,10 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         },
       ],
     },
+    // inline and hot to fix style HMR
+    inline: true,
     hot: true,
-    contentBase: false, // since we use CopyWebpackPlugin.
+    contentBase: false,
     compress: true, // 是否开启 Gzip 压缩
     host: HOST || config.dev.host,
     port: PORT || config.dev.port,
@@ -61,8 +63,9 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     new MiniCssExtractPlugin({
       // Options similar to the same options in webpackOptions.output
       // both options are optional
-      filename: utils.assetsPath('css/[name].[hash].css'),
-      chunkFilename: utils.assetsPath('css/[name].[hash].css'),
+      // HMR功能要求文件名字不能增加hash
+      filename: utils.assetsPath('css/[name].css'),
+      chunkFilename: utils.assetsPath('css/[name].css'),
     }),
     // https://github.com/ampedandwired/html-webpack-plugin
     new HtmlWebpackPlugin({

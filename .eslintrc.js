@@ -62,7 +62,7 @@ module.exports = {
       },
     ],
     // allow debugger during development
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    'no-debugger': process.env.BUILD_ENV === 'production' ? 'error' : 'off',
     // https://eslint.org/docs/rules/linebreak-style
     'linebreak-style': [0, 'error', 'windows'],
     // remove console

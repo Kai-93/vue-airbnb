@@ -5,9 +5,9 @@
   "author": "kaiser <765934690@qq.com>",
   "private": true,
   "scripts": {
-    "local-mock": "webpack-dev-server --inline --progress --config build/webpack.local.conf.js --mock",
+    "local-mock": "cross-env BUILD_ENV=local webpack-dev-server --inline --progress --config build/webpack.local.conf.js --mock",
     "mock-server": "node mock/server.js",
-    "local": "webpack-dev-server --inline --progress --config build/webpack.local.conf.js",
+    "local": "cross-env BUILD_ENV=local webpack-dev-server --inline --progress --config build/webpack.local.conf.js",
     "start": "npm run local",
     "build_dev": "cross-env BUILD_ENV=development node build/build.js",
     "build_prod": "cross-env BUILD_ENV=production node build/build.js",

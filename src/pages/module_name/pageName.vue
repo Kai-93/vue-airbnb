@@ -2,7 +2,7 @@
  * @Author: Kaiser
  * @Date: 2019-06-05 15:22:55
  * @Last Modified by: Kaiser
- * @Last Modified time: 2019-06-17 17:05:43
+ * @Last Modified time: 2019-06-20 17:23:35
  */
 
 <template>
@@ -25,4 +25,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.container {
+  background: goldenrod;
+}
 </style>

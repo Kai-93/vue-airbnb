@@ -5,7 +5,7 @@ const packageConfig = require('../package.json');
 
 exports.assetsPath = function(_path) {
   const assetsSubDirectory =
-    process.env.NODE_ENV === 'production'
+    process.env.BUILD_ENV !== 'local'
       ? config.build.assetsSubDirectory
       : config.dev.assetsSubDirectory;
 

@@ -17,7 +17,7 @@ export default {
       password: 'password',
     });
     import('./utils/test').then(({ default: test }) => {
-      test('');
+      test('0');
     });
     // test('Kaiser');
   },
@@ -32,6 +32,6 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: $color;
-  margin-top: 60px;
+  margin-top: 160px;
 }
 </style>

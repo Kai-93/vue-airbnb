@@ -34,7 +34,7 @@ module.exports = {
     path: config.build.assetsRoot,
     filename: '[name].[hash].js',
     publicPath:
-      process.env.NODE_ENV === 'production'
+      process.env.BUILD_ENV !== 'local'
         ? config.build.assetsPublicPath
         : config.dev.assetsPublicPath,
   },
@@ -67,7 +67,7 @@ module.exports = {
             options: {
               // you can specify a publicPath here
               // by default it uses publicPath in webpackOptions.output
-              hmr: process.env.NODE_ENV === 'local',
+              hmr: !process.env.BUILD_ENV,
             },
           },
           'happypack/loader?id=css',
@@ -80,9 +80,7 @@ module.exports = {
           {
             loader: MiniCssExtractPlugin.loader,
             options: {
-              // you can specify a publicPath here
-              // by default it uses publicPath in webpackOptions.output
-              hmr: process.env.NODE_ENV === 'local',
+              hmr: process.env.BUILD_ENV,
             },
           },
           'happypack/loader?id=css',

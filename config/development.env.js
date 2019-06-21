@@ -1,5 +1,8 @@
 'use strict';
-module.exports = {
-  NODE_ENV: '"development"',
-  API_DOMAIN: '"http://shopadmin.miaosuankeji.com"',
-};
+const merge = require('webpack-merge');
+const productionEnv = require('./production.env.js');
+
+module.exports = merge(productionEnv, {
+  NODE_ENV: 'development',
+  API_DOMAIN: 'http://shopadmin.miaosuankeji.com',
+});

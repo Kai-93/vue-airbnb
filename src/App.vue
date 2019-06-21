@@ -17,9 +17,10 @@ export default {
       password: 'password',
     });
     import('./utils/test').then(({ default: test }) => {
-      test('0');
+      test('v1.0.0');
     });
     // test('Kaiser');
+    console.log(process.env);
   },
 };
 </script>

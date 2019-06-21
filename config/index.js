@@ -58,7 +58,10 @@ module.exports = {
 
   build: {
     // Template for index.html
-    index: path.resolve(__dirname, `../dist/index.${VERSION}.html`),
+    index: path.resolve(
+      __dirname,
+      `../dist/index${VERSION ? '.' + VERSION : ''}.html`,
+    ),
 
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),

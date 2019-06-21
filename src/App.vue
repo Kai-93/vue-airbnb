@@ -20,6 +20,9 @@ export default {
       test('v1.0.0');
     });
     // test('Kaiser');
+    // 注释
+    debugger;
+    console.log('测试');
     console.log(process.env);
   },
 };

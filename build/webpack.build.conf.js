@@ -13,7 +13,7 @@ const env = require(`../config/${process.env.BUILD_ENV}.env`);
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 const webpackConfig = merge(baseWebpackConfig, {
-  mode: 'production',
+  mode: process.env.BUILD_ENV,
   module: {},
   devtool: config.build.productionSourceMap ? config.build.devtool : false,
   output: {
@@ -107,13 +107,42 @@ const webpackConfig = merge(baseWebpackConfig, {
     minimizer: [
       // https://github.com/webpack-contrib/uglifyjs-webpack-plugin
       // https://github.com/webpack-contrib/uglifyjs-webpack-plugin#minify
+      // https://github.com/mishoo/UglifyJS2
+      // 此处配置跟mode相关， production开启
       new UglifyJsPlugin({
         test: /\.jsx?$/,
+        // 过滤掉以".min.js"结尾的文件，我们认为这个后缀本身就是已经压缩好的代码，没必要进行二次压缩
+        exclude: /\.min\.js$/,
         cache: true,
-        parallel: 5,
-        // 提取所有的注释
-        extractComments: 'all',
+        // https://github.com/webpack-contrib/uglifyjs-webpack-plugin#parallel
+        // 开启并行压缩，充分利用cpu
+        parallel: true,
+        // https://github.com/webpack-contrib/uglifyjs-webpack-plugin#extractcomments
+        // 提取所有的注释成单独的文件
+        extractComments: false,
         sourceMap: config.build.productionSourceMap,
+        // https://github.com/mishoo/UglifyJS2#compress-options
+        uglifyOptions: {
+          compress: {
+            // 内嵌己定义但是只用到了一次 的变量
+            collapse_vars: true,
+            // 移出无法访问的代码
+            dead_code: true,
+            // 移除console
+            drop_console: true,
+            // 移除 debugger
+            drop_debugger: true,
+            // 移除没有引用的函数和变量
+            unused: true,
+          },
+          // https://github.com/mishoo/UglifyJS2#output-options
+          output: {
+            // 是否输出美化的代码，false意为压缩
+            beautify: false,
+            // 是否保留注释
+            comments: false,
+          },
+        },
       }),
     ],
   },

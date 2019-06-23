@@ -13,7 +13,7 @@ const env = require(`../config/${process.env.BUILD_ENV}.env`);
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 const webpackConfig = merge(baseWebpackConfig, {
-  mode: process.env.BUILD_ENV,
+  mode: process.env.BUILD_ENV, // process.env.BUILD_ENV
   module: {},
   devtool: config.build.productionSourceMap ? config.build.devtool : false,
   output: {
@@ -149,7 +149,10 @@ const webpackConfig = merge(baseWebpackConfig, {
   plugins: [
     // http://vuejs.github.io/vue-loader/en/workflow/production.html
     new webpack.DefinePlugin({
-      'process.env': JSON.stringify(env),
+      'process.env': JSON.stringify({
+        ...env,
+        BUILD_ENV: process.env.BUILD_ENV,
+      }),
     }),
     // 分离css
     new MiniCssExtractPlugin({

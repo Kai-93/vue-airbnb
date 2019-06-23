@@ -20,10 +20,8 @@ export default {
       test('v1.0.0');
     });
     // test('Kaiser');
-    // 注释
-    debugger;
-    console.log('测试');
-    console.log(process.env);
+    // 注释测试，生产环境看不到这条测试
+    console.log('uglifyjs测试，生产环境看不到这条打印');
   },
 };
 </script>

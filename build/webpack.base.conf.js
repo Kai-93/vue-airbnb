@@ -109,7 +109,6 @@ module.exports = {
             loader: 'babel-loader',
             options: {
               cacheDirectory: true,
-              // plugins: ['dynamic-import-webpack'],
             },
           },
         ],

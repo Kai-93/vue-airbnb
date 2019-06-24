@@ -6,20 +6,18 @@
 </template>
 
 <script>
-// import test from '@/utils/test';
-import user from '@/api/user/api_login';
+// import user from '@/api/user/api_login';
 
 export default {
   name: 'App',
   created() {
-    user.postLogin({
-      userName: 'Kaiser',
-      password: 'password',
-    });
-    import('./utils/test').then(({ default: test }) => {
-      test('v1.0.0');
-    });
-    // test('Kaiser');
+    // user.postLogin({
+    //   userName: 'Kaiser',
+    //   password: 'password',
+    // });
+    // import('./utils/test').then(({ default: test }) => {
+    //   test('v1.0.0');
+    // });
     // 注释测试，生产环境看不到这条测试
     console.log('uglifyjs测试，生产环境看不到这条打印');
   },

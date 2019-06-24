@@ -1,5 +1,5 @@
-import Cookies from './node_modules/_modules/js-cookie';
-import { encrypt, decrypt } from './node_modules/@/utils/crypto';
+import Cookies from '_modules/js-cookie';
+import { encrypt, decrypt } from '@/utils/crypto';
 
 // 获取cookie
 export function getCookie(name) {

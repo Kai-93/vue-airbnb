@@ -2,7 +2,7 @@
  * @Author: Kaiser
  * @Date: 2019-06-10 10:26:35
  * @Last Modified by: Kaiser
- * @Last Modified time: 2019-06-10 18:10:57
+ * @Last Modified time: 2019-06-25 21:34:44
  */
 import { Message } from 'element-ui';
 import NProgress from 'nprogress';
@@ -10,16 +10,10 @@ import 'nprogress/nprogress.css';
 
 const mutation = {
   /**
-   * NProgress动画开始
+   * NProgress动画控制器 start-开始 true-结束
    */
-  START_NPROGRESS: () => {
-    NProgress.start();
-  },
-  /**
-   * NProgress动画结束
-   */
-  DONE_NPROGRESS: () => {
-    NProgress.done();
+  nprogressHandler: (status = 'start') => {
+    NProgress[status]();
   },
   /**
    * 展示信息
@@ -29,12 +23,19 @@ const mutation = {
    *  msg：展示具体信息
    * }
    */
-  SHOW_MESSAGE: (state, data) => {
+  messageHandler: (state, data) => {
     if (data.type && Message[data.type]) {
       Message[data.type](data.msg);
       return undefined;
     }
     throw new Error('please enter the correct type of information');
+  },
+  /**
+   * 控制导航菜单的显示隐藏
+   * @param status false-隐藏 true-显示
+   */
+  navMemuHandler(state) {
+    state.booIsNavMenuCollapse = !state.booIsNavMenuCollapse;
   },
 };
 export default mutation;

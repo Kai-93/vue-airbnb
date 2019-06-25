@@ -93,7 +93,10 @@ module.exports = {
             loader: 'sass-resources-loader',
             options: {
               // Provide path to the file with resources
-              resources: [path.resolve(__dirname, './../src/style/theme.scss')],
+              resources: [
+                path.resolve(__dirname, './../src/style/theme.scss'),
+                path.resolve(__dirname, './../src/style/common.scss'),
+              ],
             },
           },
         ],

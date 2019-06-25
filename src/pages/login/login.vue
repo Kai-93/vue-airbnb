@@ -2,12 +2,12 @@
  * @Author: Kaiser
  * @Date: 2019-06-05 15:22:55
  * @Last Modified by: Kaiser
- * @Last Modified time: 2019-06-24 14:05:03
+ * @Last Modified time: 2019-06-25 13:02:48
  */
 
 <template>
   <div class='container'>
-    <p>typescript</p>
+    <p>登录页面</p>
   </div>
 </template>
 <script lang="ts">
@@ -16,12 +16,7 @@ export default {
   data() {
     return {};
   },
-  created() {
-    function greeter(person: String) {
-      window.console.log(`Hello, ${person}`);
-    }
-    greeter('Kaiser');
-  },
+  created() {},
 };
 </script>
 <style lang="scss" scoped>

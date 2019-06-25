@@ -2,7 +2,7 @@
  * @Author: Kaiser
  * @Date: 2019-06-10 10:26:24
  * @Last Modified by: Kaiser
- * @Last Modified time: 2019-06-11 10:56:52
+ * @Last Modified time: 2019-06-25 21:41:00
  */
 const action = {
   /**
@@ -11,12 +11,8 @@ const action = {
    * @param {String} status  start or done
    */
   setNProgress({ commit }, status = 'start') {
-    if (status === 'start') {
-      commit('START_NPROGRESS');
-      return;
-    }
-    if (status === 'done') {
-      commit('DONE_NPROGRESS');
+    if (['start', 'done'].includes(status)) {
+      commit('nprogressHandler', status);
       return;
     }
     throw new Error('please enter a correct value of status');
@@ -27,7 +23,14 @@ const action = {
    * @param {String} message 展示的是信息
    */
   showErrorMessage({ commit }, message) {
-    commit('SHOW_MESSAGE', { type: 'error', msg: message.toString() });
+    commit('messageHandler', { type: 'error', msg: message.toString() });
+  },
+  /**
+   * 控制导航显示器的显示隐藏
+   * @param {Object} {commit} 默认参数
+   */
+  setNavMenu({ commit }) {
+    commit('navMemuHandler');
   },
 };
 

@@ -4,7 +4,7 @@
       <NavMenu class="side"></NavMenu>
     </el-aside>
     <el-container>
-      <el-header>
+      <el-header height="auto">
         <div class="header">
           <hamburger></hamburger>
           <breadcrumb></breadcrumb>

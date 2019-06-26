@@ -17,6 +17,7 @@ export default new Router({
     {
       path: '/',
       name: 'layout',
+      redirect: '/home',
       component: asyncImport('layout/layout'), // 页面框架
       children: routes,
     },

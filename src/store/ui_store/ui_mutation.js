@@ -35,7 +35,7 @@ const mutation = {
    * @param status false-隐藏 true-显示
    */
   navMemuHandler(state) {
-    state.booIsNavMenuCollapse = !state.booIsNavMenuCollapse;
+    state.bIsNavMenuCollapse = !state.bIsNavMenuCollapse;
   },
 };
 export default mutation;

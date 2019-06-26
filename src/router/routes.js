@@ -1,3 +1,4 @@
+import home from './home';
 import goods from './goods';
 
-export default [...goods];
+export default [...home, ...goods];

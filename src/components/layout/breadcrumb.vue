@@ -1,17 +1,32 @@
 <template>
-  <el-breadcrumb class="breadcrumb"
+  <el-breadcrumb v-if="breadcrumbs.length"
+                 class="breadcrumb"
                  separator="/">
-    <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-    <el-breadcrumb-item><a href="/">活动管理</a></el-breadcrumb-item>
-    <el-breadcrumb-item>活动列表</el-breadcrumb-item>
-    <el-breadcrumb-item>活动详情</el-breadcrumb-item>
+    <el-breadcrumb-item v-for="(item,index) in breadcrumbs"
+                        :key="index"
+                        :to="{ path: item.path || '/' }">{{item.meta.name}}</el-breadcrumb-item>
   </el-breadcrumb>
 </template>
 <script>
 export default {
   name: 'name',
   data() {
-    return {};
+    return {
+      breadcrumbs: [],
+    };
+  },
+  watch: {
+    $route(route) {
+      this.setBreadcrums(route);
+    },
+  },
+  mounted() {
+    this.setBreadcrums(this.$route);
+  },
+  methods: {
+    setBreadcrums(route) {
+      this.breadcrumbs = route.matched.filter(item => item.meta && item.meta.name);
+    },
   },
 };
 </script>

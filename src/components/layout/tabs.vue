@@ -1,13 +1,14 @@
 <template>
   <div class='container'>
-    <el-tag v-for="(tag,index) in tags"
+    <el-tag v-for="(tab,index) in tabs"
+            :ref="'tag'+index"
             :key="index"
-            :closable="tag.closable"
+            :closable="tab.closable"
             :disable-transitions="false"
-            :class="isCurrentTag(index)"
-            @click="openPage(tag)"
-            @close="closeTag(tag)">
-      {{tag.meta.name}}
+            :class="{'active':isActive(tab)}"
+            @click="openPage(tab)"
+            @close="removeCurrentTab(tab)">
+      {{tab.meta.name}}
     </el-tag>
   </div>
 </template>
@@ -16,29 +17,16 @@ export default {
   name: 'tabs',
   data() {
     return {
-      tags: [
-        {
-          meta: {
-            name: '首页',
-          },
-          fullPath: '/?a=1',
-          closable: false,
-        },
-        {
-          meta: {
-            name: '商品列表',
-          },
-          fullPath: '/goods_list?b=1',
-          closable: true,
-        },
-      ],
-      nCurrentTagIndex: 0,
     };
+  },
+  computed: {
+    tabs() {
+      return this.$store.getters['ui/tabs'];
+    },
   },
   watch: {
     $route() {
-      this.addTag(this.$route);
-      this.removeCurrentTag(this.$route);
+      this.addTab(this.$route);
     },
   },
   methods: {
@@ -46,37 +34,36 @@ export default {
      * 是否是当前显示标签
      * @param {Number} index - 遍历标签的对象
      */
-    isCurrentTag(index) {
-      return index === this.currentTagIndex;
-    },
-    /**
-     * 关系标签
-     * @param {Object} tag - 关闭的标签对象
-     */
-    closeTag(tag) {
-      console.log('closeTag: ', JSON.stringify(tag));
-      this.tags.splice(this.tags.indexOf(tag), 1);
-    },
-    /**
-     * 打开标签页
-     * @param {Object} tag - 关闭的标签对象
-     */
-    openPage(tag) {
-      this.$router.push(`${tag.fullPath}`);
+    isActive(route) {
+      return route.name === this.$route.name;
     },
     /**
      * 增加标签
      * @param {Object} route - 新增路由对象
      */
-    addTag(route) {
-      this.$store.dispatch('ui/addTag', route);
+    addTab(route) {
+      this.$store.dispatch('ui/addTab', route);
     },
     /**
      * 移出标签
+     * 移除后判断是否是当前页面，是-跳转到最后一个标签，否-不做特殊处理
+     * @param {Object} tab - 关闭的标签对象
      */
-    removeCurrentTag(index) {
-      console.log(index);
-      this.$store.dispatch('ui/removeCurrentTag', index);
+    removeCurrentTab(route) {
+      const vm = this;
+      this.$store.dispatch('ui/removeCurrentTab', route).then((deletedRoute) => {
+        if (deletedRoute.name === vm.$route.name) {
+          const length = vm.tabs.length;
+          vm.openPage(vm.tabs[length - 1]);
+        }
+      });
+    },
+    /**
+     * 打开标签页
+     * @param {Object} tab - 关闭的标签对象
+     */
+    openPage(tab) {
+      this.$router.push(tab.fullPath);
     },
   },
 };
@@ -100,5 +87,8 @@ export default {
   width: 90px;
   margin-left: 10px;
   vertical-align: bottom;
+}
+.active {
+  background: #fff;
 }
 </style>

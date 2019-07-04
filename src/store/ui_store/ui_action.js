@@ -2,7 +2,7 @@
  * @Author: Kaiser
  * @Date: 2019-06-10 10:26:24
  * @Last Modified by: Kaiser
- * @Last Modified time: 2019-06-25 21:41:00
+ * @Last Modified time: 2019-06-26 15:58:03
  */
 const action = {
   /**
@@ -31,6 +31,25 @@ const action = {
    */
   setNavMenu({ commit }) {
     commit('navMemuHandler');
+  },
+  /**
+   * 增加标签
+   * @param {Object} {commit} 默认参数
+   * @param {Object} route 需要增加的路由信息
+   */
+  addTab({ commit }, route) {
+    commit('addTab', route);
+  },
+  /**
+   * 移除便签
+   * @param {Object} {commit} 默认参数
+   * @param {Object} route 需要移除的路由信息
+   */
+  removeCurrentTab({ commit }, route) {
+    return new Promise((resolve) => {
+      commit('removeTab', route);
+      resolve(route);
+    });
   },
 };
 

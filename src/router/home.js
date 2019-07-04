@@ -2,11 +2,11 @@ import asyncImport from '@/utils/import_production';
 
 export default [
   {
-    path: '/home',
+    path: 'home',
     name: 'home',
     meta: {
       name: '首页',
     },
-    component: asyncImport('home/home'),
+    component: asyncImport('home'),
   },
 ];

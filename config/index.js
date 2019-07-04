@@ -67,7 +67,7 @@ module.exports = {
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
     // 可以在这里设置cdn todo
-    assetsPublicPath: '',
+    assetsPublicPath: '/',
 
     /**
      * Source Maps
